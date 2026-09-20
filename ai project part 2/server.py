@@ -1,5 +1,5 @@
  
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import re
 import ast
@@ -437,8 +437,14 @@ def reasoning_wrap(text, fact):
 
 
 # =====================================================================
-# MAIN ROUTE
+# FRONTEND AND API ROUTES
 # =====================================================================
+@app.route("/", methods=["GET"])
+def index():
+    """Serve the chat interface at the application root."""
+    return send_from_directory(app.root_path, "webai.html")
+
+
 @app.route("/api/chat", methods=["POST"])
 def chat():
     data = request.get_json() or {}
