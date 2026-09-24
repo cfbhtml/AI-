@@ -1,167 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>My AI Assistant</title>
+<meta charset="UTF-8">
+<title>Code Century</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
+<style>
+  body {
+    margin: 0;
+    background: #0f172a;
+    color: #e5e7eb;
+    font-family: "Inter", Arial, sans-serif;
+  }
 
-    header {
-      padding: 16px;
-      background: #1e3a8a;
-      border-bottom: 2px solid #3b82f6;
-      font-size: 22px;
-      font-weight: bold;
-      color: white;
-      text-align: center;
-    }
+  /* Header */
+  #header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: #1e1e22;
+    border-bottom: 2px solid #3b82f6;
+  }
 
-    #chat {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px;
-    }
+  #title {
+    font-size: 40px;
+    font-weight: 700;
+    color: #3b82f6;
+  }
 
-    .msg {
-      max-width: 75%;
-      padding: 12px 14px;
-      margin-bottom: 14px;
-      border-radius: 10px;
-      line-height: 1.4;
-      white-space: pre-wrap;
-    }
+  #logo svg {
+    width: 60px;
+    height: 60px;
+  }
 
-    .user {
-      background: #3b82f6;
-      margin-left: auto;
-      border-bottom-right-radius: 2px;
-      color: white;
-    }
+  /* Tabs */
+  #tabs {
+    display: flex;
+    background: #1e1e22;
+    border-bottom: 2px solid #3b82f6;
+  }
 
-    .ai {
-      background: #1e293b;
-      margin-right: auto;
-      border-bottom-left-radius: 2px;
-    }
+  .tab {
+    padding: 14px 30px;
+    cursor: pointer;
+    color: #e5e7eb;
+    font-weight: 600;
+    transition: 0.2s;
+  }
 
-    #input-area {
-      display: flex;
-      padding: 12px;
-      background: #1e3a8a;
-      border-top: 2px solid #3b82f6;
-    }
+  .tab.active {
+    background: #3b82f6;
+    color: white;
+  }
 
-    #inputBox {
-      flex: 1;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      background: #0f172a;
-      color: #fff;
-      font-size: 15px;
-    }
+  /* Pages */
+  .page {
+    display: none;
+    padding: 20px;
+  }
 
-    #sendBtn {
-      margin-left: 10px;
-      padding: 12px 18px;
-      background: #3b82f6;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
-    }
+  .page.active {
+    display: block;
+  }
 
-    #status {
-      padding: 6px 12px;
-      font-size: 12px;
-      color: #93c5fd;
-      text-align: center;
-    }
-  </style>
+  /* AI Chat */
+  #messages {
+    height: 400px;
+    overflow-y: auto;
+    background: #1e1e22;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #3b82f6;
+  }
+
+  .msg {
+    margin-bottom: 14px;
+    padding: 12px;
+    border-radius: 10px;
+    max-width: 70%;
+    white-space: pre-wrap;
+  }
+
+  .user {
+    background: #3b82f6;
+    color: white;
+    margin-left: auto;
+  }
+
+  .ai {
+    background: #2a2a31;
+    border: 1px solid #3b82f6;
+    margin-right: auto;
+  }
+
+  #inputArea {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+
+  #inputText {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #1e1e22;
+    color: white;
+  }
+
+  #sendBtn {
+    padding: 12px 20px;
+    background: #3b82f6;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Code Century Editor */
+  #codeEditor {
+    width: 100%;
+    height: 300px;
+    background: #1e1e22;
+    color: #e5e7eb;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 12px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+  }
+
+  #consoleOutput {
+    width: 100%;
+    height: 150px;
+    background: #000000;
+    color: #00ff00;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 20px;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* Offline Editor */
+  #offlineEditor {
+    width: 100%;
+    height: 350px;
+    background: #1e1e22;
+    color: #e5e7eb;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 12px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+  }
+
+  #offlinePreview {
+    width: 100%;
+    height: 350px;
+    background: white;
+    border-radius: 12px;
+    margin-top: 20px;
+  }
+
+  button {
+    padding: 12px 20px;
+    background: #3b82f6;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  input[type="file"] {
+    padding: 12px;
+    background: #1e1e22;
+    color: white;
+    border-radius: 10px;
+    border: 2px solid #3b82f6;
+  }
+</style>
 </head>
 
 <body>
 
-<header>My AI Assistant</header>
+<!-- Header -->
+<div id="header">
+  <div id="logo">
+    <svg viewBox="0 0 180 180">
+      <defs>
+        <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#3b82f6"/>
+          <stop offset="50%" stop-color="#a855f7"/>
+          <stop offset="100%" stop-color="#ec4899"/>
+        </linearGradient>
+      </defs>
+      <rect width="180" height="180" rx="40" fill="url(#grad)"/>
+      <text x="50%" y="55%" text-anchor="middle" font-size="80" fill="white" font-family="Arial Rounded MT Bold">C</text>
+      <circle cx="70" cy="70" r="8" fill="white"/>
+      <circle cx="110" cy="70" r="8" fill="white"/>
+      <rect x="55" y="100" width="70" height="20" rx="6" fill="white"/>
+    </svg>
+  </div>
 
-<div id="chat"></div>
-
-<div id="input-area">
-  <input id="inputBox" placeholder="Type your message..." />
-  <button id="sendBtn">Send</button>
+  <div id="title">Code Century</div>
 </div>
 
-<div id="status">Status: idle</div>
+<!-- Tabs -->
+<div id="tabs">
+  <div class="tab active" data-page="aiPage">AI Assistant</div>
+  <div class="tab" data-page="codePage">Code Century Editor</div>
+  <div class="tab" data-page="offlinePage">Offline Century Editor</div>
+</div>
+
+<!-- AI Page -->
+<div id="aiPage" class="page active">
+  <div id="messages"></div>
+
+  <div id="inputArea">
+    <input id="inputText" placeholder="Ask Code Century anything...">
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
+
+<!-- Code Century Editor Page -->
+<div id="codePage" class="page">
+  <select id="langSelect">
+    <option value="python">Python</option>
+    <option value="cpp">C++</option>
+    <option value="html">HTML</option>
+    <option value="js">JavaScript</option>
+    <option value="php">PHP</option>
+    <option value="java">Java</option>
+  </select>
+
+  <textarea id="codeEditor" placeholder="Write or generate code here..."></textarea>
+
+  <button id="genBtn">Generate Code</button>
+  <button id="runBtn">Run Code</button>
+
+  <textarea id="consoleOutput" readonly placeholder="Console output..."></textarea>
+</div>
+
+<!-- Offline Editor Page -->
+<div id="offlinePage" class="page">
+  <textarea id="offlineEditor" placeholder="Write HTML, CSS, or JS here..."></textarea>
+
+  <button onclick="offlinePreview()">Preview</button>
+  <button onclick="offlineSave()">Save File</button>
+  <input type="file" id="offlineFile" onchange="offlineLoad()">
+
+  <iframe id="offlinePreview"></iframe>
+</div>
 
 <script>
-  const chat = document.getElementById("chat");
-  const input = document.getElementById("inputBox");
-  const sendBtn = document.getElementById("sendBtn");
-  const statusEl = document.getElementById("status");
+  /* TAB SWITCHING */
+  const tabs = document.querySelectorAll(".tab");
+  const pages = document.querySelectorAll(".page");
 
-  function addMessage(role, text) {
+  tabs.forEach(tab => {
+    tab.onclick = () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      pages.forEach(p => p.classList.remove("active"));
+
+      tab.classList.add("active");
+      document.getElementById(tab.dataset.page).classList.add("active");
+    };
+  });
+
+  /* AI CHAT */
+  const messages = document.getElementById("messages");
+  const inputText = document.getElementById("inputText");
+  const sendBtn = document.getElementById("sendBtn");
+
+  function addMsg(role, text) {
     const div = document.createElement("div");
     div.className = "msg " + role;
     div.textContent = text;
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
   }
 
-  async function sendMessage() {
-    const text = input.value.trim();
+  sendBtn.onclick = async () => {
+    const text = inputText.value.trim();
     if (!text) return;
 
-    addMessage("user", text);
-    input.value = "";
-    input.focus();
+    addMsg("user", text);
+    inputText.value = "";
 
-    statusEl.textContent = "Status: contacting backend...";
-    sendBtn.disabled = true;
+    const res = await fetch("http://127.0.0.1:5000/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
 
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          session: "default",
-          message: text
-        })
-      });
+    const data = await res.json();
+    addMsg("ai", data.reply);
+  };
 
-      const data = await res.json();
+  /* ONLINE EDITOR */
+  const langSelect = document.getElementById("langSelect");
+  const codeEditor = document.getElementById("codeEditor");
+  const consoleOutput = document.getElementById("consoleOutput");
 
-      if (data.reply) {
-        addMessage("ai", data.reply);
-        statusEl.textContent = "Status: idle";
-      } else {
-        addMessage("ai", "Backend error: no reply received.");
-        statusEl.textContent = "Status: backend error";
-      }
+  document.getElementById("genBtn").onclick = async () => {
+    const lang = langSelect.value;
+    const prompt = "make " + lang + " script";
 
-    } catch (err) {
-      addMessage("ai", "Backend unreachable — is server.py running?");
-      statusEl.textContent = "Status: backend unreachable";
-    }
+    const res = await fetch("http://127.0.0.1:5000/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: prompt })
+    });
 
-    sendBtn.disabled = false;
+    const data = await res.json();
+    codeEditor.value = data.reply;
+  };
+
+  document.getElementById("runBtn").onclick = async () => {
+    const lang = langSelect.value;
+    const code = codeEditor.value;
+
+    const res = await fetch("http://127.0.0.1:5000/api/run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ language: lang, code: code })
+    });
+
+    const data = await res.json();
+    consoleOutput.value = data.output;
+  };
+
+  /* OFFLINE EDITOR */
+  function offlinePreview() {
+    const code = document.getElementById("offlineEditor").value;
+    document.getElementById("offlinePreview").srcdoc = code;
   }
 
-  sendBtn.onclick = sendMessage;
+  function offlineSave() {
+    const code = document.getElementById("offlineEditor").value;
+    const blob = new Blob([code], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
 
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter") sendMessage();
-  });
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "offline_code.html";
+    a.click();
+  }
+
+  function offlineLoad() {
+    const file = document.getElementById("offlineFile").files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      document.getElementById("offlineEditor").value = e.target.result;
+    };
+
+    reader.readAsText(file);
+  }
 </script>
 
 </body>
