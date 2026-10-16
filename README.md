@@ -1,4 +1,4 @@
-# Offline AI Assistant
+# Online AI Assistant uses a backend not offline 
 
 A lightweight browser-based assistant built with Flask. It runs locally, does
 not require an API key, and includes basic chat, math, unit conversion,
